@@ -1,307 +1,1226 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FinancEdu Pro | Niveau Entrepreneur</title>
-    <style>
-        :root {
-            --bg: #0f172a;
-            --card: #1e293b;
-            --primary: #34d399; /* Vert émeraude */
-            --accent: #818cf8; /* Violet/Bleu tech */
-            --text: #f1f5f9;
-            --text-muted: #94a3b8;
-            --correct: #059669;
-            --wrong: #dc2626;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FINANCE PRO COACH</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DESIGN SYSTEM — Finance Pro Coach
+   Dark premium dashboard, Syne + DM Sans
+   ============================================================ */
+:root {
+  --bg-base:    #0a0c10;
+  --bg-surface: #11141c;
+  --bg-card:    #181c27;
+  --bg-hover:   #1e2333;
+  --border:     #252a3a;
+  --border-light:#2e3550;
+  --accent:     #4f8eff;
+  --accent-glow:#4f8eff33;
+  --accent2:    #22d3a0;
+  --accent3:    #f5a623;
+  --accent4:    #e05cff;
+  --danger:     #ff4d6d;
+  --text-1:     #eef0f6;
+  --text-2:     #9099b8;
+  --text-3:     #5a6285;
+  --radius:     12px;
+  --radius-lg:  18px;
+  --shadow:     0 4px 32px #00000055;
+  --font-display:'Syne', sans-serif;
+  --font-body:  'DM Sans', sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-body);
+  background:var(--bg-base);
+  color:var(--text-1);
+  min-height:100vh;
+  line-height:1.6;
+  overflow-x:hidden;
+}
 
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-        }
+/* ── Scrollbar ── */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg-base)}
+::-webkit-scrollbar-thumb{background:var(--border-light);border-radius:3px}
 
-        .app-container { width: 100%; max-width: 600px; }
+/* ── Typography ── */
+h1,h2,h3,h4{font-family:var(--font-display);letter-spacing:-0.02em}
+a{color:var(--accent);text-decoration:none}
+code{font-size:0.85em;background:var(--bg-hover);padding:2px 6px;border-radius:4px;color:var(--accent2)}
 
-        /* Header & Progress */
-        header { text-align: center; margin-bottom: 2rem; }
-        .global-progress {
-            background: #334155;
-            height: 10px;
-            border-radius: 5px;
-            margin: 10px 0;
-            overflow: hidden;
-        }
-        #global-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: 0.5s; }
+/* ── Layout Shell ── */
+#app{display:flex;flex-direction:column;min-height:100vh}
+.topbar{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;height:60px;
+  background:rgba(10,12,16,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.topbar-logo{
+  font-family:var(--font-display);font-weight:800;font-size:1.1rem;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  display:flex;align-items:center;gap:8px;
+}
+.topbar-logo span{font-size:1.3rem}
+.xp-pill{
+  display:flex;align-items:center;gap:8px;
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:999px;padding:6px 14px;font-size:0.82rem;font-weight:500;
+}
+.xp-pill .xp-val{color:var(--accent3);font-family:var(--font-display);font-weight:700}
+.xp-pill .xp-label{color:var(--text-2)}
 
-        /* Dashboard Cards */
-        .module-grid { display: grid; gap: 15px; }
-        .card {
-            background: var(--card);
-            padding: 20px;
-            border-radius: 16px;
-            cursor: pointer;
-            border: 1px solid #334155;
-            transition: all 0.2s;
-            position: relative;
-        }
-        .card:hover { transform: translateY(-3px); border-color: var(--accent); }
-        .card h3 { margin: 0 0 10px 0; color: var(--primary); }
-        .card p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
-        .status-badge {
-            position: absolute; top: 15px; right: 15px;
-            font-size: 0.7rem; font-weight: bold; padding: 4px 8px; border-radius: 20px;
-        }
-        .status-done { background: var(--correct); color: white; }
+/* ── Nav Tabs ── */
+.nav-tabs{
+  display:flex;gap:4px;padding:16px 24px 0;
+  border-bottom:1px solid var(--border);
+  background:var(--bg-surface);
+  overflow-x:auto;
+}
+.nav-tab{
+  padding:10px 18px;border-radius:8px 8px 0 0;
+  font-size:0.85rem;font-weight:500;cursor:pointer;
+  color:var(--text-2);border:1px solid transparent;
+  border-bottom:none;transition:all .2s;white-space:nowrap;
+  background:transparent;
+}
+.nav-tab:hover{color:var(--text-1);background:var(--bg-hover)}
+.nav-tab.active{
+  color:var(--accent);background:var(--bg-base);
+  border-color:var(--border);
+}
 
-        /* Quiz Logic UI */
-        .hidden { display: none; }
-        .btn-action {
-            background: var(--accent);
-            color: white; border: none; padding: 14px;
-            width: 100%; border-radius: 8px; font-weight: 600;
-            cursor: pointer; margin-top: 15px;
-        }
-        .btn-back { background: transparent; color: var(--text-muted); border: 1px solid #334155; padding: 8px 16px; border-radius: 8px; cursor: pointer; margin-bottom: 20px; }
+/* ── Main ── */
+.main{flex:1;padding:28px 24px;max-width:1100px;margin:0 auto;width:100%}
 
-        .option {
-            background: #334155; padding: 15px; border-radius: 10px; margin-bottom: 10px;
-            cursor: pointer; border: 2px solid transparent; transition: 0.2s;
-        }
-        .option:hover { border-color: var(--accent); }
-        .option.selected { border-color: var(--accent); background: #475569; }
-        .option.correct-opt { border-color: var(--correct); background: #064e3b; }
-        .option.wrong-opt { border-color: var(--wrong); background: #7f1d1d; }
+/* ── Cards ── */
+.card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:24px;
+  transition:border-color .2s;
+}
+.card:hover{border-color:var(--border-light)}
+.card-sm{padding:16px 18px}
+.card-accent{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent-glow)}
 
-        .explanation {
-            background: #1e293b; border-left: 4px solid var(--accent);
-            padding: 15px; margin-top: 15px; font-size: 0.9rem; line-height: 1.5;
-        }
+/* ── Buttons ── */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:var(--radius);
+  font-family:var(--font-body);font-size:0.9rem;font-weight:500;
+  cursor:pointer;border:none;transition:all .2s;
+}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:#6ba3ff;transform:translateY(-1px)}
+.btn-ghost{background:transparent;color:var(--text-2);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--bg-hover);color:var(--text-1)}
+.btn-success{background:var(--accent2);color:#0a0c10}
+.btn-success:hover{filter:brightness(1.1)}
+.btn-sm{padding:7px 14px;font-size:0.82rem}
 
-        /* Responsive */
-        @media (max-width: 480px) {
-            body { padding: 10px; }
-        }
-    </style>
+/* ── Module Grid ── */
+.module-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
+  gap:16px;margin-top:20px;
+}
+.module-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:20px;cursor:pointer;
+  transition:all .25s;position:relative;overflow:hidden;
+}
+.module-card::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,var(--accent-glow),transparent);
+  opacity:0;transition:opacity .3s;
+}
+.module-card:hover::before{opacity:1}
+.module-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:var(--shadow)}
+.module-card.done{border-color:var(--accent2)}
+.module-card.done::after{
+  content:'✓';position:absolute;top:12px;right:12px;
+  width:22px;height:22px;border-radius:50%;
+  background:var(--accent2);color:#0a0c10;
+  font-size:0.75rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+}
+.mod-icon{font-size:1.8rem;margin-bottom:12px}
+.mod-title{font-family:var(--font-display);font-weight:700;font-size:1rem;margin-bottom:4px}
+.mod-desc{font-size:0.82rem;color:var(--text-2);line-height:1.5}
+.mod-progress{
+  margin-top:14px;height:3px;background:var(--border);border-radius:99px;
+}
+.mod-progress-bar{height:100%;border-radius:99px;background:var(--accent);transition:width .4s}
+
+/* ── Chat Interface ── */
+.chat-container{display:flex;flex-direction:column;gap:0}
+.chat-header{
+  display:flex;align-items:center;gap:14px;
+  padding-bottom:20px;border-bottom:1px solid var(--border);margin-bottom:20px;
+}
+.chat-header .back-btn{
+  background:var(--bg-hover);border:1px solid var(--border);
+  border-radius:8px;padding:8px 12px;cursor:pointer;
+  color:var(--text-2);font-size:0.85rem;transition:all .2s;
+}
+.chat-header .back-btn:hover{color:var(--text-1);border-color:var(--border-light)}
+.chat-messages{
+  display:flex;flex-direction:column;gap:16px;
+  min-height:300px;max-height:55vh;overflow-y:auto;
+  padding:4px 2px;
+}
+.msg{display:flex;gap:12px;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg-avatar{
+  width:36px;height:36px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1rem;font-weight:700;
+}
+.msg.prof .msg-avatar{background:linear-gradient(135deg,var(--accent),var(--accent4));color:#fff}
+.msg.user .msg-avatar{background:var(--bg-hover);border:1px solid var(--border);color:var(--text-2)}
+.msg-body{flex:1}
+.msg-name{font-size:0.75rem;font-weight:600;margin-bottom:4px;color:var(--text-2)}
+.msg.prof .msg-name{color:var(--accent)}
+.msg.user .msg-name{color:var(--text-2)}
+.msg-text{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:0 12px 12px 12px;padding:12px 16px;
+  font-size:0.9rem;line-height:1.65;
+}
+.msg.user .msg-text{
+  background:var(--bg-hover);
+  border-radius:12px 0 12px 12px;
+}
+.msg-text strong{color:var(--accent2)}
+.msg-text em{color:var(--accent3)}
+.msg-text .highlight{
+  background:var(--accent-glow);border-left:3px solid var(--accent);
+  padding:8px 12px;border-radius:0 8px 8px 0;margin:8px 0;
+  font-size:0.88rem;
+}
+.feedback-box{
+  background:linear-gradient(135deg,#0d1a0d,#0a1020);
+  border:1px solid var(--accent2);
+  border-radius:12px;padding:16px;margin-top:8px;
+}
+.feedback-box h4{color:var(--accent2);font-size:0.85rem;margin-bottom:8px;font-family:var(--font-display)}
+.feedback-box p{font-size:0.88rem;color:var(--text-1);line-height:1.7}
+
+/* ── Input Area ── */
+.chat-input-area{
+  margin-top:20px;padding-top:20px;border-top:1px solid var(--border);
+}
+.chat-input-wrap{display:flex;gap:10px;align-items:flex-end}
+.chat-input{
+  flex:1;background:var(--bg-hover);border:1px solid var(--border);
+  border-radius:var(--radius);padding:12px 16px;
+  color:var(--text-1);font-family:var(--font-body);font-size:0.9rem;
+  resize:none;min-height:52px;max-height:140px;line-height:1.5;
+  transition:border-color .2s;
+}
+.chat-input:focus{outline:none;border-color:var(--accent)}
+.chat-input::placeholder{color:var(--text-3)}
+
+/* ── Tools Section ── */
+.tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+@media(max-width:640px){.tools-grid{grid-template-columns:1fr}}
+.tool-panel{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:22px}
+.tool-panel h3{font-family:var(--font-display);font-size:1rem;margin-bottom:18px;display:flex;align-items:center;gap:8px}
+.tool-panel h3 .tool-icon{font-size:1.2rem}
+.form-row{display:flex;flex-direction:column;gap:5px;margin-bottom:14px}
+.form-row label{font-size:0.78rem;color:var(--text-2);font-weight:500;text-transform:uppercase;letter-spacing:.05em}
+.form-input{
+  background:var(--bg-hover);border:1px solid var(--border);
+  border-radius:8px;padding:9px 12px;
+  color:var(--text-1);font-family:var(--font-body);font-size:0.9rem;
+  transition:border-color .2s;width:100%;
+}
+.form-input:focus{outline:none;border-color:var(--accent)}
+.result-box{
+  background:var(--bg-base);border:1px solid var(--border);
+  border-radius:8px;padding:12px 16px;margin-top:16px;
+}
+.result-val{font-family:var(--font-display);font-size:1.6rem;font-weight:700;color:var(--accent2)}
+.result-label{font-size:0.78rem;color:var(--text-2);margin-top:2px}
+
+/* ── SVG Chart ── */
+.chart-wrap{margin-top:16px;overflow:hidden;border-radius:8px;background:var(--bg-base);padding:12px}
+#compound-chart{width:100%;height:160px;display:block}
+.chart-legend{display:flex;gap:16px;margin-top:8px;font-size:0.75rem;color:var(--text-2)}
+.legend-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px}
+
+/* ── Journal ── */
+.journal-input{
+  width:100%;background:var(--bg-hover);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px 16px;
+  color:var(--text-1);font-family:var(--font-body);font-size:0.9rem;
+  resize:vertical;min-height:80px;transition:border-color .2s;
+}
+.journal-input:focus{outline:none;border-color:var(--accent4)}
+.journal-list{margin-top:20px;display:flex;flex-direction:column;gap:10px}
+.journal-item{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:14px 16px;
+  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
+  animation:fadeUp .3s ease;
+}
+.journal-item-text{font-size:0.9rem;line-height:1.5;flex:1}
+.journal-item-meta{font-size:0.75rem;color:var(--text-3);white-space:nowrap}
+.delete-btn{
+  background:none;border:none;color:var(--text-3);cursor:pointer;
+  font-size:1rem;padding:2px 6px;border-radius:4px;transition:color .2s;
+}
+.delete-btn:hover{color:var(--danger)}
+.journal-tag{
+  display:inline-block;background:var(--accent4)22;color:var(--accent4);
+  border-radius:4px;padding:2px 8px;font-size:0.72rem;font-weight:600;
+  margin-top:6px;
+}
+
+/* ── Badges ── */
+.badges-grid{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px}
+.badge{
+  display:flex;align-items:center;gap:10px;
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:10px 14px;
+  font-size:0.82rem;
+}
+.badge.earned{border-color:var(--accent3);background:#1a150a}
+.badge.earned .badge-icon{filter:none}
+.badge .badge-icon{font-size:1.3rem;filter:grayscale(1) opacity(.35)}
+.badge .badge-name{font-weight:600}
+.badge .badge-desc{color:var(--text-2);font-size:0.75rem}
+.badge.earned .badge-name{color:var(--accent3)}
+
+/* ── XP Bar ── */
+.xp-bar-wrap{margin-top:24px}
+.xp-bar-label{display:flex;justify-content:space-between;font-size:0.8rem;color:var(--text-2);margin-bottom:6px}
+.xp-bar{height:8px;background:var(--border);border-radius:99px;overflow:hidden}
+.xp-bar-fill{
+  height:100%;border-radius:99px;
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  transition:width .6s cubic-bezier(.25,.8,.25,1);
+}
+
+/* ── Dashboard Stats ── */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px}
+@media(max-width:640px){.stats-row{grid-template-columns:repeat(2,1fr)}}
+.stat-card{
+  background:var(--bg-card);border:1px solid var(--border);
+  border-radius:var(--radius);padding:16px;
+}
+.stat-val{font-family:var(--font-display);font-size:1.5rem;font-weight:700;margin-bottom:2px}
+.stat-label{font-size:0.75rem;color:var(--text-2)}
+.stat-card.blue .stat-val{color:var(--accent)}
+.stat-card.green .stat-val{color:var(--accent2)}
+.stat-card.orange .stat-val{color:var(--accent3)}
+.stat-card.purple .stat-val{color:var(--accent4)}
+
+/* ── Progress Tracker ── */
+.progress-tracker{margin-top:8px}
+.step-list{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.step-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border-radius:8px;
+  background:var(--bg-hover);font-size:0.85rem;
+}
+.step-item.active{background:var(--accent-glow);border:1px solid var(--accent)}
+.step-item.done{color:var(--text-2)}
+.step-dot{
+  width:8px;height:8px;border-radius:50%;flex-shrink:0;
+  background:var(--border);
+}
+.step-item.active .step-dot{background:var(--accent)}
+.step-item.done .step-dot{background:var(--accent2)}
+
+/* ── Animations ── */
+.fade-in{animation:fadeUp .4s ease both}
+.slide-in{animation:slideIn .35s ease both}
+@keyframes slideIn{from{opacity:0;transform:translateX(16px)}to{opacity:1;transform:translateX(0)}}
+
+/* ── Pulse loader ── */
+.typing-indicator{display:flex;gap:4px;padding:8px 12px;align-items:center}
+.typing-indicator span{
+  width:6px;height:6px;border-radius:50%;background:var(--accent);
+  animation:pulse 1.2s infinite;
+}
+.typing-indicator span:nth-child(2){animation-delay:.2s}
+.typing-indicator span:nth-child(3){animation-delay:.4s}
+@keyframes pulse{0%,100%{opacity:.3;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+
+/* ── Utility ── */
+.hidden{display:none!important}
+.flex{display:flex}.items-center{align-items:center}
+.gap-2{gap:8px}.gap-3{gap:12px}
+.mt-4{margin-top:16px}.mt-6{margin-top:24px}.mt-2{margin-top:8px}
+.text-sm{font-size:0.85rem}.text-xs{font-size:0.75rem}
+.text-muted{color:var(--text-2)}.text-accent{color:var(--accent)}
+.text-green{color:var(--accent2)}.text-orange{color:var(--accent3)}
+.font-bold{font-weight:700}.font-display{font-family:var(--font-display)}
+.w-full{width:100%}
+.separator{height:1px;background:var(--border);margin:20px 0}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .topbar{padding:0 16px}
+  .main{padding:20px 16px}
+  .nav-tabs{padding:12px 16px 0}
+}
+</style>
 </head>
 <body>
+<div id="app">
 
-<div class="app-container">
-    <div id="home">
-        <header>
-            <h1>FinancEdu <span style="color:var(--accent)">PRO</span></h1>
-            <p>Niveau 2 : Entrepreneur & Investisseur</p>
-            <div class="global-progress"><div id="global-bar"></div></div>
-            <small id="prog-text">0% Masterisé</small>
-        </header>
-
-        <div class="module-grid">
-            <div class="card" onclick="startModule(0)">
-                <div id="badge-0" class="status-badge"></div>
-                <h3>📈 4. PEA & ETF</h3>
-                <p>Fiscalité, diversification et puissance du long terme.</p>
-            </div>
-            <div class="card" onclick="startModule(1)">
-                <div id="badge-1" class="status-badge"></div>
-                <h3>🛡️ 5. Gestion des Risques</h3>
-                <p>Volatilité, diversification et psychologie de l'investisseur.</p>
-            </div>
-            <div class="card" onclick="startModule(2)">
-                <div id="badge-2" class="status-badge"></div>
-                <h3>🏗️ 6. Effet de Levier</h3>
-                <p>Utiliser la dette pour bâtir un patrimoine (Immo & Business).</p>
-            </div>
-            <div class="card" onclick="startModule(3)">
-                <div id="badge-3" class="status-badge"></div>
-                <h3>⚖️ 7. Fiscalité & TVA</h3>
-                <p>Comprendre ce qu'on donne à l'État (et comment optimiser).</p>
-            </div>
-            <button class="btn-action" style="background:linear-gradient(45deg, #4f46e5, #9333ea)" onclick="startGlobalQuiz()">🏆 QUIZ GLOBAL FINAL</button>
-        </div>
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-logo">
+      <span>💹</span> FINANCE PRO COACH
     </div>
-
-    <div id="quiz-view" class="hidden">
-        <button class="btn-back" onclick="goHome()">← Retour au menu</button>
-        <div id="quiz-content">
-            <h2 id="q-title">Module</h2>
-            <div class="global-progress"><div id="q-progress-bar" style="height:4px; background:var(--accent); width:0%;"></div></div>
-            <p id="q-text" style="font-size: 1.1rem; margin: 20px 0;"></p>
-            <div id="options"></div>
-            <div id="q-feedback" class="explanation hidden"></div>
-            <button id="btn-next" class="btn-action" onclick="handleNext()">Valider la réponse</button>
-        </div>
+    <div class="xp-pill">
+      <span class="xp-label">Crédibilité</span>
+      <span class="xp-val" id="xp-display">0 XP</span>
     </div>
+  </header>
 
-    <div id="result-view" class="hidden">
-        <header>
-            <h2 id="res-title">Bravo !</h2>
-            <p style="font-size: 3rem; margin: 10px 0;" id="res-score">0%</p>
-            <p id="res-comment"></p>
-            <button class="btn-action" onclick="goHome()">Continuer la progression</button>
-        </header>
-    </div>
+  <!-- NAV TABS -->
+  <nav class="nav-tabs" id="nav-tabs">
+    <div class="nav-tab active" data-tab="dashboard">🏠 Dashboard</div>
+    <div class="nav-tab" data-tab="modules">📚 Modules</div>
+    <div class="nav-tab" data-tab="tools">🛠 Outils</div>
+    <div class="nav-tab" data-tab="journal">📓 Journal</div>
+    <div class="nav-tab" data-tab="badges">🏆 Badges</div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="main" id="main-content"></main>
+
 </div>
 
 <script>
-    // --- DONNÉES ---
-    const modules = [
-        {
-            title: "PEA & ETF",
-            questions: [
-                { q: "Quelle est la fiscalité d'un PEA après 5 ans de détention ?", a: ["30% (Flat tax)", "17.2% (Prélèvements sociaux uniquement)", "0% (Exonération totale)"], c: 1, exp: "Après 5 ans, les gains sont exonérés d'impôt sur le revenu, mais restent soumis aux prélèvements sociaux (17.2%)." },
-                { q: "Pourquoi choisir un ETF World plutôt qu'une action Apple ?", a: ["Pour la diversification", "Parce que c'est moins cher", "Parce que Apple va faire faillite"], c: 0, exp: "Un ETF World contient +1500 entreprises. Si une chute, les autres compensent." },
-                { q: "Un investissement de 100€/mois à 7% sur 10 ans donne environ :", a: ["12 000€", "17 300€", "25 000€"], c: 1, exp: "Calcul : 12000€ versés + ~5300€ d'intérêts composés. Magique, non ?" }
-            ]
-        },
-        {
-            title: "Gestion des Risques",
-            questions: [
-                { q: "La bourse chute de 20%. Quelle est la meilleure réaction ?", a: ["Tout vendre pour sauver les meubles", "Ne rien faire et continuer son plan", "Arrêter d'investir"], c: 1, exp: "La volatilité est normale. Vendre en bas transforme une perte virtuelle en perte réelle." },
-                { q: "Que signifie la règle '100 - ton âge' ?", a: ["Le nombre d'actions à acheter", "Le % d'actions dans ton portefeuille", "L'âge de la retraite"], c: 1, exp: "Plus tu es jeune (16 ans), plus tu peux avoir d'actions (84%) car tu as le temps de laisser passer les crises." }
-            ]
-        },
-        {
-            title: "Effet de Levier",
-            questions: [
-                { q: "Qu'est-ce que l'effet de levier ?", a: ["Emprunter pour investir", "Acheter des actions à crédit", "Vendre à découvert"], c: 0, exp: "C'est utiliser l'argent de la banque pour acquérir un actif qui rapporte plus que le coût du crédit." },
-                { q: "Un appart à 100k€ rapporte 600€/mois. Le crédit coûte 500€. C'est :", a: ["Un Cashflow positif", "Une perte d'argent", "Un crédit conso"], c: 0, exp: "L'immobilier s'autofinance et dégage 100€ de surplus. C'est l'enrichissement par la dette." }
-            ]
-        },
-        {
-            title: "Fiscalité & TVA",
-            questions: [
-                { q: "Tu es Micro-Entrepreneur. La TVA est due quand :", a: ["Dès le premier euro", "Après ~36k€ de CA (seuil)", "Jamais"], c: 1, exp: "Il existe une franchise de TVA jusqu'à un certain seuil. En dessous, tu ne la factures pas." },
-                { q: "Le bénéfice imposable, c'est quoi ?", a: ["Le CA total", "CA - charges déductibles", "Ce qu'il reste sur le compte"], c: 1, exp: "Tu ne payes d'impôts que sur ce que tu as réellement gagné (Bénéfice)." }
-            ]
-        }
-    ];
+/* ============================================================
+   FINANCE PRO COACH — Application Logic
+   ============================================================ */
 
-    // --- LOGIQUE ---
-    let state = {
-        currentQuestions: [],
-        index: 0,
-        score: 0,
-        moduleIdx: null,
-        isGlobal: false,
-        answered: false
-    };
+// ── State & Persistence ────────────────────────────────────────
+const STORAGE_KEY = 'fpc_state_v1';
+let state = {
+  xp: 0,
+  currentTab: 'dashboard',
+  modules: {}, // { m1: { step: 0, answers: [], done: false } }
+  journal: [],  // [{ id, text, date }]
+  badges: {},   // { badge_id: true }
+  toolHistory: {}
+};
 
-    function updateDashboard() {
-        let totalProg = 0;
-        modules.forEach((m, i) => {
-            const saved = localStorage.getItem(`pro-mod-${i}`);
-            if(saved >= 80) {
-                document.getElementById(`badge-${i}`).innerText = "MAÎTRISÉ ✅";
-                document.getElementById(`badge-${i}`).className = "status-badge status-done";
-                totalProg += 25;
-            }
-        });
-        document.getElementById('global-bar').style.width = totalProg + "%";
-        document.getElementById('prog-text').innerText = totalProg + "% Masterisé";
+function loadState() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) state = { ...state, ...JSON.parse(saved) };
+  } catch(e) {}
+}
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+// ── Module Definitions ─────────────────────────────────────────
+const MODULES = [
+  {
+    id: 'm1', icon: '📈', color: '#4f8eff',
+    title: 'PEA & ETF',
+    desc: 'Fiscalité 17.2%, diversification mondiale, stratégie DCA',
+    steps: [
+      {
+        prof: `Bienvenue ! Commençons par le **PEA**. Le Plan d'Épargne en Actions est une enveloppe fiscale magique. Après 5 ans de détention, tu paies seulement **17,2% de prélèvements sociaux** sur tes gains — contre 30% (flat tax) en compte-titres ordinaire.\n\n<div class="highlight">💡 Exemple : Tu gagnes 10 000 € sur 10 ans. En PEA = 1 720 € d'impôts. En CTO = 3 000 €. Soit **1 280 € économisés** rien qu'avec le bon wrapper fiscal.</div>\n\nUne stratégie très efficace à ton âge : le **DCA (Dollar Cost Averaging)** — investir une somme fixe chaque mois, indépendamment du prix. Cela lisse le risque et retire l'émotion.\n\n*Question :* Imagine que tu mets 100 €/mois dans un ETF MSCI World dès 16 ans. Quelle différence entre commencer maintenant vs dans 10 ans ? (Utilise tes connaissances sur les intérêts composés)`,
+        question: "Quelle est la différence entre investir dès aujourd'hui vs dans 10 ans avec 100€/mois ?",
+        feedback: (ans) => `✅ **Excellente analyse !** Tu touches quelque chose de fondamental : le temps est la variable la plus puissante.\n\nVoici les chiffres réels (hypothèse 8%/an, durée 40 ans) :\n- **Dès 16 ans** (40 ans d'investissement) → ~310 000 €\n- **Dès 26 ans** (30 ans d'investissement) → ~136 000 €\n\nDifférence : **+174 000 €** juste pour avoir commencé 10 ans plus tôt avec le même effort mensuel. C'est le miracle des intérêts composés sur une longue durée.`
+      },
+      {
+        prof: `Parfait. Maintenant parlons **ETF (Exchange Traded Fund)**. Un ETF est un panier de titres qui réplique un indice (ex: MSCI World = les 1 500 plus grandes entreprises mondiales).\n\n**Avantages clés :**\n- Frais très bas : 0.1 à 0.3%/an (vs 1.5 à 2% pour un fonds actif)\n- Diversification instantanée mondiale\n- Accessible dès 10€\n\n**Dans un PEA**, tu peux acheter des ETF éligibles comme : Amundi MSCI World, iShares Core MSCI EM, Lyxor S&P 500.\n\n*Question :* Pourquoi un entrepreneur devrait-il diversifier en ETF plutôt que de tout réinvestir dans son business ?`,
+        question: "Pourquoi diversifier en ETF plutôt que tout mettre dans son business ?",
+        feedback: (ans) => `🎯 **Très bon raisonnement !** La règle d'or de la gestion patrimoniale :\n\n**Ne jamais avoir tous ses œufs dans le même panier**, même si ce panier s'appelle "mon business".\n\nTon business peut : couler, perdre en valeur, être illiquide. Les ETF sont : liquides à J+2, diversifiés mondialement, non corrélés à ton activité.\n\nLa stratégie optimale pour toi : réinvestir dans ton business pour la croissance, ET alimenter un PEA chaque mois pour construire ton patrimoine personnel. Les deux ne s'excluent pas !`
+      }
+    ]
+  },
+  {
+    id: 'm2', icon: '⚖️', color: '#e05cff',
+    title: 'Gestion des Risques',
+    desc: 'Volatilité, corrélation d\'actifs, psychologie de marché',
+    steps: [
+      {
+        prof: `La **gestion du risque** distingue les investisseurs amateurs des professionnels. Un actif peut avoir un excellent rendement espéré mais être insupportable à tenir mentalement.\n\n**Volatilité** = mesure des variations de prix. Une action peut perdre 50% dans une crise avant de remonter. Un entrepreneur qui a besoin de cet argent dans 6 mois ne peut pas se permettre cette volatilité.\n\n<div class="highlight">📌 Règle d'or : N'investis que l'argent dont tu n'auras PAS besoin dans les 5 prochaines années.</div>\n\n**Corrélation des actifs** : Un portefeuille intelligent mélange des actifs qui ne bougent pas ensemble. Actions + Obligations + Immobilier = moins de volatilité globale.\n\n*Question :* Comment gères-tu psychologiquement une baisse de 30% sur ton portefeuille ?`,
+        question: "Comment gères-tu psychologiquement une baisse de -30% ?",
+        feedback: (ans) => `🧠 **Voilà une question qui fait la différence entre ceux qui réussissent et les autres.**\n\nLes erreurs classiques lors d'une baisse :\n1. **Paniquer et vendre** (bloquer une perte latente en perte réelle)\n2. **Regarder son portefeuille tous les jours** (torture inutile)\n3. **Comparer à son sommet** (biais d'ancrage)\n\nLa bonne attitude : une baisse de 30% = les ETF sont **en solde** ! Si ton DCA continue, tu achètes plus de parts au même prix mensuel. La stratégie DCA est *auto-anti-panique*.`
+      },
+      {
+        prof: `Maintenant, le concept de **risque de concentration**. Si 80% de ton patrimoine est dans 1 seul actif (même excellent), tu prends un risque énorme.\n\n**Règle des tiers (exemple) :**\n- 1/3 Actifs financiers (PEA/ETF)\n- 1/3 Immobilier (RP ou locatif)\n- 1/3 Liquidités & Business\n\n**Les 4 grands biais à connaître :**\n1. *FOMO* (Fear of Missing Out) — acheter au sommet\n2. *Biais de confirmation* — ignorer les mauvaises nouvelles\n3. *Excès de confiance* — croire qu'on "bat le marché"\n4. *Aversion aux pertes* — la douleur d'une perte est 2x supérieure au plaisir d'un gain\n\n*Question :* Décris une situation où le FOMO t'a (ou pourrait t') faire prendre une mauvaise décision financière.`,
+        question: "Décris une situation FOMO financière que tu pourrais vivre.",
+        feedback: (ans) => `💡 **Parfait ! Tu as identifié un biais.** C'est la première étape pour s'en protéger.\n\nLa technique anti-FOMO la plus efficace : **la checklist de décision d'investissement**. Avant tout achat, réponds à ces 3 questions :\n1. Comprends-je exactement ce que j'achète ?\n2. Cette décision serait-elle la même dans 6 mois ?\n3. Suis-je en train de réagir à l'émotion du moment ou à une analyse rationnelle ?\n\nWarren Buffett dit : *"Soyez craintif quand les autres sont cupides, et cupide quand les autres sont craintifs."*`
+      }
+    ]
+  },
+  {
+    id: 'm3', icon: '🏦', color: '#f5a623',
+    title: 'Effet de Levier',
+    desc: 'Crédit immo, ratio d\'endettement, cash-flow positif',
+    steps: [
+      {
+        prof: `L'**effet de levier** est l'outil le plus puissant — et le plus dangereux — en finance. Il consiste à utiliser l'argent des autres (emprunt) pour amplifier son rendement.\n\n**Exemple concret :**\nTu achètes un appartement 100 000 € avec :\n- 20 000 € de fonds propres\n- 80 000 € de crédit\n\nIl monte à 120 000 €. Ton gain : 20 000 €. Ton ROI = **100% sur ton capital investi** (20K → 40K), alors que l'appartement n'a pris que 20%.\n\n<div class="highlight">⚠️ Mais si l'appartement descend à 80 000 €, tu as perdu 100% de ta mise initiale et tu dois encore 80 000 € à la banque. L'effet levier amplifie dans les deux sens.</div>\n\n*Question :* Dans quelles conditions l'effet de levier immobilier est-il sûr pour un entrepreneur ?`,
+        question: "Dans quelles conditions l'effet levier immobilier est-il sûr ?",
+        feedback: (ans) => `🎯 **Excellente réflexion !** Les conditions de sécurité sont :\n\n1. **Cash-flow positif** : Le loyer > mensualité crédit + charges + taxe foncière\n2. **Taux d'endettement** < 35% des revenus (norme bancaire française)\n3. **Durée de détention** longue (min 7-10 ans pour absorber les frais de notaire ~8%)\n4. **Réserve de sécurité** : 3-6 mois de crédit en cash en cas de vacance locative\n\nL'immobilier locatif n'est rentable que si le locataire rembourse ton crédit à ta place. C'est ça, le vrai effet levier intelligent.`
+      }
+    ]
+  },
+  {
+    id: 'm4', icon: '🧾', color: '#22d3a0',
+    title: 'Fiscalité Entrepreneur',
+    desc: 'TVA, cotisations sociales, impôt sur le revenu',
+    steps: [
+      {
+        prof: `La fiscalité est le sujet que la plupart des jeunes entrepreneurs ignorent jusqu'à la première déclaration. Voici les bases absolues.\n\n**En Micro-Entreprise (auto-entrepreneur) :**\n- Cotisations sociales : ~22% du CA (activité de service)\n- Impôt sur le revenu : option micro (abattement 50%) ou versement libératoire (2.2% du CA)\n- TVA : exonéré jusqu'à 36 800 €/an de CA (seuil 2024)\n\n**Exemple :** CA = 20 000 €\n- Cotisations : ~4 400 €\n- Impôt (versement libératoire) : ~440 €\n- Net : 15 160 € (soit ~76% de ton CA)\n\n<div class="highlight">💡 Astuce : Ouvre un compte bancaire séparé pour ton business. Vire-toi chaque mois 70% du CA et garde 30% en trésorerie de sécurité pour les impôts.</div>\n\n*Question :* Quand est-il intéressant de passer de micro-entreprise à SASU ou EURL ?`,
+        question: "Quand passer de micro-entreprise à SASU/EURL ?",
+        feedback: (ans) => `📊 **Bonne question stratégique !** Les seuils à surveiller :\n\n**Passer à une société (SASU/EURL) quand :**\n1. CA > 72 600 € (seuil micro-entreprise service) ou 176 200 € (vente)\n2. Tu veux **conserver des bénéfices dans la société** à l'IS (15% jusqu'à 42 500 €) plutôt qu'à l'IR\n3. Tu veux protéger ton **patrimoine personnel** (responsabilité limitée en SASU)\n4. Tu as des **charges réelles** importantes à déduire (locaux, matériel, etc.)\n\nEn dessous de ces seuils, la micro-entreprise reste souvent le plus simple et le moins cher en gestion.`
+      }
+    ]
+  },
+  {
+    id: 'm5', icon: '🏠', color: '#ff6b6b',
+    title: 'Immobilier Locatif',
+    desc: 'Rendement brut vs net, travaux, gestion locative',
+    steps: [
+      {
+        prof: `L'immobilier locatif est souvent le premier investissement "concret" des entrepreneurs. Mais attention aux **calculs trompeurs**.\n\n**Rendement brut** (le chiffre vendu par les agences) :\n> Loyer annuel / Prix d'achat × 100\n> Ex : 7 200 € loyer / 120 000 € prix = **6% brut**\n\n**Rendement net** (la réalité) :\n> (Loyer - Charges - Taxe foncière - Assurance - Gestion locative - Vacance locative estimée) / (Prix + Frais de notaire + Travaux)\n\nEn pratique, un **4-5% net** est déjà excellent dans une grande ville. Un 8% brut annoncé peut cacher un 3% net dans les faits.\n\n<div class="highlight">📍 La règle des 70% : Si le loyer brut annuel ne couvre pas 70% du crédit annuel hors assurance, le cash-flow sera probablement négatif.</div>\n\n*Question :* Cite 3 charges cachées que les vendeurs n'annoncent jamais dans les annonces immobilières.`,
+        question: "Cite 3 charges cachées dans l'immobilier locatif.",
+        feedback: (ans) => `🏆 **Très bonne analyse !** Les charges que 90% des acheteurs oublient :\n\n1. **Taxe foncière** : 800 à 2 000 €/an en ville, non récupérable sur le locataire\n2. **Charges de copropriété non récupérables** : ravalement, ascenseur, gardien...\n3. **Vacance locative** : 1-2 mois/an à prévoir = perte de 8-16% des loyers\n4. **Frais de gestion locative** : 7-10% des loyers si vous déléguez\n5. **Provision travaux** : toit, chaudière, électricité... compter 1%/an de la valeur du bien\n6. **Assurance Propriétaire Non Occupant (PNO)** + Garantie Loyers Impayés (GLI)\n\nUn bon investissement s'analyse AVEC toutes ces charges dès le départ.`
+      }
+    ]
+  },
+  {
+    id: 'm6', icon: '📊', color: '#4ecdc4',
+    title: 'Budget Prévisionnel',
+    desc: 'Trésorerie 12 mois, seuil de rentabilité, marge de sécurité',
+    steps: [
+      {
+        prof: `Le budget prévisionnel est **l'outil #1 de survie d'un entrepreneur**. La plupart des startups qui meurent ne manquent pas d'idées — elles manquent de **cash**.\n\n**Trésorerie à 12 mois = ton tableau de bord de survie :**\n- Colonne 1 : Encaissements prévus (CA mensuel)\n- Colonne 2 : Décaissements prévus (charges fixes + variables)\n- Colonne 3 : Solde cumulé\n\n**Seuil de rentabilité (point mort) :**\n> Charges fixes ÷ (1 - Charges variables / CA)\n\nEx : Charges fixes = 2 000 €/mois, Marge sur coûts variables = 70%\n> Seuil = 2 000 / 0.70 = **2 857 €/mois** à facturer pour couvrir tous tes frais.\n\n<div class="highlight">🎯 Marge de sécurité = (CA réel - Seuil) / CA réel. Si tu facturas 5 000 €, ta marge = (5000-2857)/5000 = 43%. Tu peux perdre 43% de ton CA avant de perdre de l'argent.</div>\n\n*Question :* Quelles sont les 3 premières charges fixes d'un entrepreneur digital qui démarre ?`,
+        question: "Quelles sont les 3 premières charges fixes d'un entrepreneur digital ?",
+        feedback: (ans) => `📋 **Bonne analyse des coûts !** Les charges fixes d'un entrepreneur digital :\n\n**Incontournables :**\n1. Cotisations sociales (si rémunération) ou forfait micro\n2. Abonnements outils (Adobe, Notion, Canva Pro, hébergement web)\n3. Expert-comptable (optionnel mais recommandé dès 20K€ CA)\n\n**Souvent oubliées :**\n- Téléphone/internet pro\n- Assurance Responsabilité Civile Pro\n- Formation continue\n- Publicité (si campagnes régulières)\n\n**La vraie discipline :** Avoir son tableau de trésorerie mis à jour chaque semaine. Ce n'est pas glamour, mais ça évite les mauvaises surprises de fin de trimestre.`
+      }
+    ]
+  },
+  {
+    id: 'm7', icon: '🧠', color: '#a29bfe',
+    title: 'Psychologie de l\'Argent',
+    desc: 'Biais cognitifs, FOMO, gratification différée',
+    steps: [
+      {
+        prof: `Le chapitre le plus important — et le moins enseigné à l'école. **L'argent est 80% psychologie, 20% mathématiques.**\n\nLes études montrent que les personnes à QI élevé ne s'enrichissent pas nécessairement plus vite que les autres. Ce qui fait la différence : la **maîtrise émotionnelle** et les **habitudes financières**.\n\n**Le test du marshmallow transposé à la finance :**\nGratification immédiate (dépenser maintenant) vs Gratification différée (investir maintenant, profiter dans 10 ans).\n\nLes biais les plus coûteux :\n1. **Effet de dotation** : on valorise plus ce qu'on possède que ce qu'on ne possède pas encore\n2. **Comptabilité mentale** : traiter différemment 100€ gagnés vs 100€ économisés (même argent !)\n3. **Biais du présent** : hypervaloriser le présent vs le futur (taux d'actualisation personnel trop élevé)\n\n*Question :* Décris une décision financière récente que tu regrettes, et quel biais en était la cause.`,
+        question: "Une décision financière récente que tu regrettes + quel biais ?",
+        feedback: (ans) => `🌟 **Bravo pour cette introspection !** C'est exactement ça, la maturité financière.\n\nMorgan Housel (auteur de *"La Psychologie de l'Argent"*) dit :\n> *"Le comportement raisonnable bat l'analyse parfaite."*\n\nUn investisseur qui choisit un portefeuille "moins optimal" mais qu'il peut tenir sans paniquer bat l'investisseur qui choisit le portefeuille "parfait" mais vend au premier krach.\n\n**Les 3 habitudes anti-biais :**\n1. **Automatiser** ses investissements (virement le 1er du mois, avant de dépenser)\n2. **Journaliser** ses décisions financières (pourquoi j'ai acheté/vendu ?)\n3. **Avoir une politique écrite** : "Je ne vends que si X ou Y" — décidé à froid, pas dans le stress.`
+      }
+    ]
+  }
+];
+
+// ── Badges ─────────────────────────────────────────────────────
+const BADGE_DEFS = [
+  { id: 'first_answer', icon: '✍️', name: 'Première Réponse', desc: 'Donner sa première réponse', xp: 25 },
+  { id: 'module_1', icon: '📈', name: 'Maître PEA', desc: 'Terminer le module PEA & ETF', xp: 100 },
+  { id: 'module_4', icon: '🧾', name: 'Expert Fiscal', desc: 'Terminer le module Fiscalité', xp: 100 },
+  { id: 'all_modules', icon: '🎓', name: 'Finance Pro', desc: 'Terminer tous les modules', xp: 500 },
+  { id: 'journal_5', icon: '📝', name: 'Journaliste', desc: 'Ajouter 5 questions au journal', xp: 50 },
+  { id: 'tools_used', icon: '🛠', name: 'Ingénieur Finance', desc: 'Utiliser les 2 simulateurs', xp: 75 },
+  { id: 'xp_200', icon: '⚡', name: 'Momentum', desc: 'Atteindre 200 XP', xp: 0 },
+];
+
+function awardBadge(id) {
+  if (state.badges[id]) return;
+  const badge = BADGE_DEFS.find(b => b.id === id);
+  if (!badge) return;
+  state.badges[id] = true;
+  state.xp += badge.xp;
+  saveState();
+  updateXPDisplay();
+  if (badge.xp > 0) showToast(`🏆 Badge débloqué : ${badge.name} (+${badge.xp} XP)`);
+}
+
+function addXP(amount) {
+  state.xp += amount;
+  if (state.xp >= 200) awardBadge('xp_200');
+  saveState();
+  updateXPDisplay();
+}
+
+function updateXPDisplay() {
+  document.getElementById('xp-display').textContent = state.xp + ' XP';
+}
+
+// ── Toast ──────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.style.cssText = `
+    position:fixed;bottom:24px;right:24px;z-index:9999;
+    background:#1e2333;border:1px solid #4f8eff;border-radius:12px;
+    padding:12px 20px;font-size:0.88rem;color:#eef0f6;
+    box-shadow:0 8px 32px #00000055;animation:fadeUp .3s ease;
+    max-width:320px;
+  `;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 3500);
+}
+
+// ── Router ─────────────────────────────────────────────────────
+function navigate(tab) {
+  state.currentTab = tab;
+  document.querySelectorAll('.nav-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === tab);
+  });
+  renderMain();
+}
+
+function renderMain() {
+  const main = document.getElementById('main-content');
+  main.innerHTML = '';
+  switch(state.currentTab) {
+    case 'dashboard': renderDashboard(main); break;
+    case 'modules':   renderModules(main); break;
+    case 'tools':     renderTools(main); break;
+    case 'journal':   renderJournal(main); break;
+    case 'badges':    renderBadges(main); break;
+    case 'chat':      renderChat(main); break;
+  }
+}
+
+// ── Dashboard ──────────────────────────────────────────────────
+function renderDashboard(el) {
+  const doneModules = MODULES.filter(m => state.modules[m.id]?.done).length;
+  const totalAnswers = MODULES.reduce((acc, m) => acc + (state.modules[m.id]?.answers?.length || 0), 0);
+  const journalCount = state.journal.length;
+  const badgeCount = Object.keys(state.badges).length;
+
+  const level = state.xp < 100 ? 'Apprenti' : state.xp < 300 ? 'Analyste' : state.xp < 600 ? 'Investisseur' : state.xp < 1000 ? 'Expert' : '🌟 Finance Pro';
+  const nextLevelXp = state.xp < 100 ? 100 : state.xp < 300 ? 300 : state.xp < 600 ? 600 : state.xp < 1000 ? 1000 : 1000;
+  const pct = Math.min(100, Math.round((state.xp / nextLevelXp) * 100));
+
+  el.innerHTML = `
+    <div class="fade-in">
+      <div style="margin-bottom:24px">
+        <h2 style="font-size:1.5rem;margin-bottom:6px">Bonjour, futur expert 👋</h2>
+        <p class="text-muted text-sm">Ton tableau de bord de progression financière</p>
+      </div>
+
+      <div class="stats-row">
+        <div class="stat-card blue">
+          <div class="stat-val">${state.xp}</div>
+          <div class="stat-label">XP Total</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-val">${doneModules}/7</div>
+          <div class="stat-label">Modules complétés</div>
+        </div>
+        <div class="stat-card orange">
+          <div class="stat-val">${totalAnswers}</div>
+          <div class="stat-label">Réponses données</div>
+        </div>
+        <div class="stat-card purple">
+          <div class="stat-val">${badgeCount}</div>
+          <div class="stat-label">Badges obtenus</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="card">
+          <h3 style="font-size:1rem;margin-bottom:16px">🎯 Niveau actuel</h3>
+          <div style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;color:var(--accent3);margin-bottom:12px">${level}</div>
+          <div class="xp-bar-label"><span>Progression</span><span>${state.xp} / ${nextLevelXp} XP</span></div>
+          <div class="xp-bar"><div class="xp-bar-fill" style="width:${pct}%"></div></div>
+          <p class="text-xs text-muted" style="margin-top:8px">Continue à répondre aux modules pour gagner de l'XP !</p>
+        </div>
+        <div class="card">
+          <h3 style="font-size:1rem;margin-bottom:16px">📚 Prochain module recommandé</h3>
+          ${(() => {
+            const next = MODULES.find(m => !state.modules[m.id]?.done);
+            if (!next) return '<p class="text-green">🎉 Tous les modules complétés !</p>';
+            return `
+              <div style="display:flex;align-items:center;gap:12px;cursor:pointer" onclick="openModule('${next.id}')">
+                <div style="font-size:2rem">${next.icon}</div>
+                <div>
+                  <div style="font-weight:600;margin-bottom:2px">${next.title}</div>
+                  <div class="text-xs text-muted">${next.desc}</div>
+                </div>
+              </div>
+              <button class="btn btn-primary btn-sm" style="margin-top:14px;width:100%" onclick="openModule('${next.id}')">Commencer →</button>
+            `;
+          })()}
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <h3 style="font-size:1rem;margin-bottom:16px">🗺 Feuille de route</h3>
+        <div class="step-list">
+          ${MODULES.map((m, i) => {
+            const ms = state.modules[m.id];
+            const done = ms?.done;
+            const step = ms?.step || 0;
+            const inProgress = step > 0 && !done;
+            return `
+              <div class="step-item ${done ? 'done' : inProgress ? 'active' : ''}" 
+                   style="cursor:pointer" onclick="openModule('${m.id}')">
+                <div class="step-dot"></div>
+                <span style="flex:1">${m.icon} ${m.title}</span>
+                <span class="text-xs" style="color:${done ? 'var(--accent2)' : inProgress ? 'var(--accent)' : 'var(--text-3)'}">
+                  ${done ? '✓ Complété' : inProgress ? `Étape ${step}/${m.steps.length}` : 'Non démarré'}
+                </span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// ── Modules List ───────────────────────────────────────────────
+function renderModules(el) {
+  el.innerHTML = `
+    <div class="fade-in">
+      <h2 style="font-size:1.3rem;margin-bottom:6px">📚 Modules de Formation</h2>
+      <p class="text-muted text-sm" style="margin-bottom:4px">7 modules pour maîtriser la finance entrepreneuriale</p>
+      <div class="module-grid">
+        ${MODULES.map(m => {
+          const ms = state.modules[m.id];
+          const done = ms?.done;
+          const step = ms?.step || 0;
+          const pct = done ? 100 : Math.round((step / m.steps.length) * 100);
+          return `
+            <div class="module-card ${done ? 'done' : ''}" onclick="openModule('${m.id}')">
+              <div class="mod-icon">${m.icon}</div>
+              <div class="mod-title">${m.title}</div>
+              <div class="mod-desc">${m.desc}</div>
+              <div class="mod-progress">
+                <div class="mod-progress-bar" style="width:${pct}%;background:${m.color}"></div>
+              </div>
+              <div class="text-xs text-muted" style="margin-top:8px">${pct}% complété · ${m.steps.length} étape${m.steps.length > 1 ? 's' : ''}</div>
+            </div>
+          `;
+        }).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function openModule(id) {
+  state.currentTab = 'chat';
+  state._activeModule = id;
+  if (!state.modules[id]) state.modules[id] = { step: 0, answers: [], done: false };
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  renderMain();
+}
+
+// ── Chat / Module Interface ────────────────────────────────────
+function renderChat(el) {
+  const id = state._activeModule;
+  const mod = MODULES.find(m => m.id === id);
+  if (!mod) { navigate('modules'); return; }
+
+  const ms = state.modules[id];
+  const currentStep = ms.step;
+  const stepDef = mod.steps[currentStep];
+
+  // Build message history
+  let messages = [];
+  for (let i = 0; i < ms.step; i++) {
+    messages.push({ type: 'prof', html: formatMsgText(mod.steps[i].prof) });
+    if (ms.answers[i]) {
+      messages.push({ type: 'user', text: ms.answers[i] });
+      messages.push({ type: 'feedback', html: mod.steps[i].feedback(ms.answers[i]) });
     }
+  }
+  if (!ms.done && stepDef) {
+    messages.push({ type: 'prof', html: formatMsgText(stepDef.prof) });
+  }
+  if (ms.done) {
+    messages.push({ type: 'done' });
+  }
 
-    function startModule(idx) {
-        state = { currentQuestions: [...modules[idx].questions], index: 0, score: 0, moduleIdx: idx, isGlobal: false, answered: false };
-        showQuiz();
+  el.innerHTML = `
+    <div class="chat-container fade-in">
+      <div class="chat-header">
+        <button class="back-btn" onclick="navigate('modules')">← Retour</button>
+        <div style="font-size:1.5rem">${mod.icon}</div>
+        <div>
+          <div style="font-family:var(--font-display);font-weight:700">${mod.title}</div>
+          <div class="text-xs text-muted">${ms.done ? 'Complété ✓' : `Étape ${currentStep + 1} / ${mod.steps.length}`}</div>
+        </div>
+        <div style="margin-left:auto">
+          <div class="xp-bar" style="width:120px">
+            <div class="xp-bar-fill" style="width:${ms.done ? 100 : Math.round((currentStep / mod.steps.length) * 100)}%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="chat-messages" id="chat-msgs">
+        ${messages.map(renderChatMsg).join('')}
+      </div>
+
+      ${!ms.done ? `
+        <div class="chat-input-area">
+          <div class="text-xs text-muted" style="margin-bottom:8px">💬 ${stepDef?.question || ''}</div>
+          <div class="chat-input-wrap">
+            <textarea class="chat-input" id="chat-input" placeholder="Tape ta réponse ici..." rows="2"></textarea>
+            <button class="btn btn-primary" onclick="submitAnswer('${id}')">Envoyer ↗</button>
+          </div>
+        </div>
+      ` : `
+        <div style="text-align:center;padding:20px">
+          <button class="btn btn-ghost" onclick="navigate('modules')">← Retour aux modules</button>
+          <button class="btn btn-success" style="margin-left:12px" onclick="navigate('dashboard')">Dashboard 🏠</button>
+        </div>
+      `}
+    </div>
+  `;
+
+  // Scroll to bottom
+  setTimeout(() => {
+    const msgs = document.getElementById('chat-msgs');
+    if (msgs) msgs.scrollTop = msgs.scrollHeight;
+  }, 100);
+
+  // Enter key submit
+  const inp = document.getElementById('chat-input');
+  if (inp) {
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitAnswer(id); }
+    });
+  }
+}
+
+function renderChatMsg(msg) {
+  if (msg.type === 'prof') {
+    return `
+      <div class="msg prof">
+        <div class="msg-avatar">🎓</div>
+        <div class="msg-body">
+          <div class="msg-name">Prof Finance</div>
+          <div class="msg-text">${msg.html}</div>
+        </div>
+      </div>
+    `;
+  }
+  if (msg.type === 'user') {
+    return `
+      <div class="msg user">
+        <div class="msg-body" style="text-align:right">
+          <div class="msg-name">Toi</div>
+          <div class="msg-text">${escapeHtml(msg.text)}</div>
+        </div>
+        <div class="msg-avatar">👤</div>
+      </div>
+    `;
+  }
+  if (msg.type === 'feedback') {
+    return `
+      <div class="msg prof">
+        <div class="msg-avatar" style="background:linear-gradient(135deg,#22d3a0,#4f8eff)">✓</div>
+        <div class="msg-body">
+          <div class="msg-name">Analyse du Prof</div>
+          <div class="feedback-box"><p>${formatMsgText(msg.html)}</p></div>
+        </div>
+      </div>
+    `;
+  }
+  if (msg.type === 'done') {
+    return `
+      <div class="msg prof">
+        <div class="msg-avatar" style="background:linear-gradient(135deg,#f5a623,#ff6b6b)">🏆</div>
+        <div class="msg-body">
+          <div class="msg-name">Module terminé !</div>
+          <div class="msg-text" style="border-color:var(--accent2)">
+            <strong>🎉 Félicitations !</strong> Tu as complété ce module. Continue sur les autres pour devenir un vrai Finance Pro.
+          </div>
+        </div>
+      </div>
+    `;
+  }
+  return '';
+}
+
+function formatMsgText(text) {
+  // Bold, italic, highlight
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+    .replace(/\n/g, '<br>')
+    .replace(/<div class="highlight">([\s\S]*?)<\/div>/g, '<div class="highlight">$1</div>');
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+}
+
+function submitAnswer(id) {
+  const input = document.getElementById('chat-input');
+  const answer = input?.value?.trim();
+  if (!answer) { showToast('⚠️ Écris une réponse avant d\'envoyer !'); return; }
+
+  const ms = state.modules[id];
+  const mod = MODULES.find(m => m.id === id);
+  const currentStep = ms.step;
+
+  // Save answer
+  if (!ms.answers) ms.answers = [];
+  ms.answers[currentStep] = answer;
+
+  // XP & badges
+  const xpGain = Math.min(50, Math.max(15, Math.floor(answer.length / 5)));
+  addXP(xpGain);
+  showToast(`+${xpGain} XP gagné !`);
+
+  if (!state.badges['first_answer']) awardBadge('first_answer');
+
+  // Next step
+  ms.step = currentStep + 1;
+  if (ms.step >= mod.steps.length) {
+    ms.done = true;
+    awardBadge('module_' + id.replace('m', ''));
+    // Check all modules done
+    if (MODULES.every(m => state.modules[m.id]?.done)) awardBadge('all_modules');
+  }
+
+  saveState();
+  renderMain();
+  setTimeout(() => {
+    const msgs = document.getElementById('chat-msgs');
+    if (msgs) msgs.scrollTop = msgs.scrollHeight;
+  }, 150);
+}
+
+// ── Tools ──────────────────────────────────────────────────────
+function renderTools(el) {
+  el.innerHTML = `
+    <div class="fade-in">
+      <h2 style="font-size:1.3rem;margin-bottom:6px">🛠 Simulateurs Financiers</h2>
+      <p class="text-muted text-sm" style="margin-bottom:20px">Calcule, projette, décide avec des données réelles</p>
+      <div class="tools-grid">
+
+        <!-- Compound Interest Calculator -->
+        <div class="tool-panel">
+          <h3><span class="tool-icon">📈</span> Intérêts Composés</h3>
+          <div class="form-row">
+            <label>Capital initial (€)</label>
+            <input type="number" class="form-input" id="ci-initial" value="1000" oninput="calcCompound()">
+          </div>
+          <div class="form-row">
+            <label>Versement mensuel (€)</label>
+            <input type="number" class="form-input" id="ci-monthly" value="100" oninput="calcCompound()">
+          </div>
+          <div class="form-row">
+            <label>Taux annuel (%)</label>
+            <input type="number" class="form-input" id="ci-rate" value="8" step="0.1" oninput="calcCompound()">
+          </div>
+          <div class="form-row">
+            <label>Durée (années)</label>
+            <input type="number" class="form-input" id="ci-years" value="20" min="1" max="50" oninput="calcCompound()">
+          </div>
+          <div class="result-box" id="ci-result"></div>
+          <div class="chart-wrap">
+            <svg id="compound-chart" viewBox="0 0 400 160" preserveAspectRatio="none"></svg>
+            <div class="chart-legend">
+              <div><span class="legend-dot" style="background:var(--accent)"></span>Portefeuille total</div>
+              <div><span class="legend-dot" style="background:var(--text-3)"></span>Capital versé</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cash Flow Calculator -->
+        <div class="tool-panel">
+          <h3><span class="tool-icon">🏠</span> Cash-Flow Immobilier</h3>
+          <div class="form-row">
+            <label>Loyer mensuel (€)</label>
+            <input type="number" class="form-input" id="cf-loyer" value="700" oninput="calcCashflow()">
+          </div>
+          <div class="form-row">
+            <label>Mensualité crédit (€)</label>
+            <input type="number" class="form-input" id="cf-credit" value="450" oninput="calcCashflow()">
+          </div>
+          <div class="form-row">
+            <label>Charges copro / mois (€)</label>
+            <input type="number" class="form-input" id="cf-charges" value="80" oninput="calcCashflow()">
+          </div>
+          <div class="form-row">
+            <label>Taxe foncière / mois (€)</label>
+            <input type="number" class="form-input" id="cf-taxe" value="60" oninput="calcCashflow()">
+          </div>
+          <div class="form-row">
+            <label>Gestion locative / mois (€)</label>
+            <input type="number" class="form-input" id="cf-gestion" value="50" oninput="calcCashflow()">
+          </div>
+          <div class="form-row">
+            <label>Vacance locative (mois/an)</label>
+            <input type="number" class="form-input" id="cf-vacance" value="1" min="0" max="12" oninput="calcCashflow()">
+          </div>
+          <div class="result-box" id="cf-result"></div>
+        </div>
+
+      </div>
+    </div>
+  `;
+  calcCompound();
+  calcCashflow();
+  // Award badge for using tools
+  if (!state._toolsUsed) state._toolsUsed = 0;
+  state._toolsUsed++;
+  if (state._toolsUsed >= 2) awardBadge('tools_used');
+  saveState();
+}
+
+function calcCompound() {
+  const P = parseFloat(document.getElementById('ci-initial')?.value) || 0;
+  const m = parseFloat(document.getElementById('ci-monthly')?.value) || 0;
+  const r = (parseFloat(document.getElementById('ci-rate')?.value) || 0) / 100 / 12;
+  const n = parseInt(document.getElementById('ci-years')?.value) || 1;
+  const months = n * 12;
+
+  // Future value calculation
+  let balance = P;
+  const dataPoints = [];
+  const capitalPoints = [];
+  for (let i = 0; i <= months; i++) {
+    if (i > 0) balance = balance * (1 + r) + m;
+    if (i % Math.max(1, Math.floor(months / 40)) === 0) {
+      dataPoints.push(balance);
+      capitalPoints.push(P + m * i);
     }
+  }
 
-    function startGlobalQuiz() {
-        const allQ = modules.flatMap(m => m.questions).sort(() => Math.random() - 0.5).slice(0, 10);
-        state = { currentQuestions: allQ, index: 0, score: 0, moduleIdx: null, isGlobal: true, answered: false };
-        showQuiz();
-    }
+  const total = balance;
+  const invested = P + m * months;
+  const gains = total - invested;
 
-    function showQuiz() {
-        document.getElementById('home').classList.add('hidden');
-        document.getElementById('result-view').classList.add('hidden');
-        document.getElementById('quiz-view').classList.remove('hidden');
-        loadQuestion();
-    }
+  const res = document.getElementById('ci-result');
+  if (res) res.innerHTML = `
+    <div class="result-val">${formatEuro(total)}</div>
+    <div class="result-label">Capital final après ${n} ans</div>
+    <div style="margin-top:10px;display:flex;gap:16px;font-size:0.8rem">
+      <div><span class="text-muted">Versé :</span> <strong>${formatEuro(invested)}</strong></div>
+      <div><span class="text-muted">Gains :</span> <strong style="color:var(--accent2)">${formatEuro(gains)}</strong></div>
+      <div><span class="text-muted">x</span> <strong style="color:var(--accent3)">${(total/Math.max(1,invested)).toFixed(1)}×</strong></div>
+    </div>
+  `;
 
-    function loadQuestion() {
-        const q = state.currentQuestions[state.index];
-        state.answered = false;
-        document.getElementById('q-title').innerText = state.isGlobal ? "Quiz Global" : modules[state.moduleIdx].title;
-        document.getElementById('q-text').innerText = q.q;
-        document.getElementById('q-feedback').classList.add('hidden');
-        document.getElementById('btn-next').innerText = "Valider la réponse";
-        document.getElementById('q-progress-bar').style.width = ((state.index / state.currentQuestions.length) * 100) + "%";
+  drawChart(dataPoints, capitalPoints);
+}
 
-        const optCont = document.getElementById('options');
-        optCont.innerHTML = '';
-        q.a.forEach((opt, i) => {
-            const div = document.createElement('div');
-            div.className = 'option';
-            div.innerText = opt;
-            div.onclick = () => selectOption(div, i);
-            optCont.appendChild(div);
-        });
-    }
+function drawChart(vals, base) {
+  const svg = document.getElementById('compound-chart');
+  if (!svg) return;
+  const W = 400, H = 160, PAD = 20;
+  const maxV = Math.max(...vals, 1);
+  const toX = i => PAD + (i / (vals.length - 1)) * (W - PAD * 2);
+  const toY = v => H - PAD - ((v / maxV) * (H - PAD * 2));
+  const pts = vals.map((v, i) => `${toX(i)},${toY(v)}`).join(' ');
+  const bpts = base.map((v, i) => `${toX(i)},${toY(v)}`).join(' ');
+  const fillPts = pts + ` ${toX(vals.length-1)},${H-PAD} ${PAD},${H-PAD}`;
 
-    function selectOption(el, idx) {
-        if(state.answered) return;
-        document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
-        el.classList.add('selected');
-        el.dataset.idx = idx;
-    }
+  svg.innerHTML = `
+    <defs>
+      <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#4f8eff" stop-opacity="0.4"/>
+        <stop offset="100%" stop-color="#4f8eff" stop-opacity="0"/>
+      </linearGradient>
+    </defs>
+    <polygon points="${fillPts}" fill="url(#cg)"/>
+    <polyline points="${bpts}" fill="none" stroke="#3d4460" stroke-width="1.5" stroke-dasharray="4 3"/>
+    <polyline points="${pts}" fill="none" stroke="#4f8eff" stroke-width="2.5" stroke-linejoin="round"/>
+  `;
+}
 
-    function handleNext() {
-        if(!state.answered) {
-            const sel = document.querySelector('.option.selected');
-            if(!sel) return alert("Choisis une réponse !");
-            
-            const q = state.currentQuestions[state.index];
-            const isCorrect = parseInt(sel.dataset.idx) === q.c;
-            
-            state.answered = true;
-            if(isCorrect) {
-                state.score++;
-                sel.classList.add('correct-opt');
-            } else {
-                sel.classList.add('wrong-opt');
-                document.querySelectorAll('.option')[q.c].classList.add('correct-opt');
-            }
-            
-            const feedback = document.getElementById('q-feedback');
-            feedback.innerText = q.exp;
-            feedback.classList.remove('hidden');
-            document.getElementById('btn-next').innerText = "Continuer";
-        } else {
-            state.index++;
-            if(state.index < state.currentQuestions.length) loadQuestion();
-            else finish();
-        }
-    }
+function calcCashflow() {
+  const loyer = parseFloat(document.getElementById('cf-loyer')?.value) || 0;
+  const credit = parseFloat(document.getElementById('cf-credit')?.value) || 0;
+  const charges = parseFloat(document.getElementById('cf-charges')?.value) || 0;
+  const taxe = parseFloat(document.getElementById('cf-taxe')?.value) || 0;
+  const gestion = parseFloat(document.getElementById('cf-gestion')?.value) || 0;
+  const vacance = parseFloat(document.getElementById('cf-vacance')?.value) || 0;
 
-    function finish() {
-        document.getElementById('quiz-view').classList.add('hidden');
-        document.getElementById('result-view').classList.remove('hidden');
-        const percent = Math.round((state.score / state.currentQuestions.length) * 100);
-        document.getElementById('res-score').innerText = percent + "%";
-        
-        if(!state.isGlobal) {
-            localStorage.setItem(`pro-mod-${state.moduleIdx}`, percent);
-        }
-        
-        let msg = percent >= 80 ? "Tu es un futur géant de la finance !" : "Encore un peu de pratique sur les chiffres.";
-        document.getElementById('res-comment').innerText = msg;
-        updateDashboard();
-    }
+  const loyerNet = loyer * (1 - vacance / 12);
+  const totalCharges = credit + charges + taxe + gestion;
+  const cashflow = loyerNet - totalCharges;
+  const annual = cashflow * 12;
+  const positive = cashflow >= 0;
 
-    function goHome() {
-        document.getElementById('home').classList.remove('hidden');
-        document.getElementById('quiz-view').classList.add('hidden');
-        document.getElementById('result-view').classList.add('hidden');
-        updateDashboard();
-    }
+  const res = document.getElementById('cf-result');
+  if (res) res.innerHTML = `
+    <div class="result-val" style="color:${positive ? 'var(--accent2)' : 'var(--danger)'}">${positive ? '+' : ''}${formatEuro(cashflow)}/mois</div>
+    <div class="result-label">Cash-flow mensuel net</div>
+    <div style="margin-top:10px;font-size:0.8rem;display:flex;flex-direction:column;gap:4px">
+      <div class="flex" style="justify-content:space-between"><span class="text-muted">Loyer net vacance</span><span>${formatEuro(loyerNet)}</span></div>
+      <div class="flex" style="justify-content:space-between"><span class="text-muted">Total charges</span><span style="color:var(--danger)">-${formatEuro(totalCharges)}</span></div>
+      <div style="border-top:1px solid var(--border);margin:4px 0;padding-top:4px" class="flex" style="justify-content:space-between">
+        <span class="text-muted">Cash-flow annuel</span>
+        <strong style="color:${positive ? 'var(--accent2)' : 'var(--danger)'}">${positive ? '+' : ''}${formatEuro(annual)}</strong>
+      </div>
+    </div>
+    <div style="margin-top:8px;font-size:0.78rem;padding:6px 10px;border-radius:6px;background:${positive ? '#0d1a0d' : '#1a0a0a'};color:${positive ? 'var(--accent2)' : 'var(--danger)'}">
+      ${positive ? '✅ Cash-flow positif — investissement rentable' : '⚠️ Cash-flow négatif — revoir le montage'}
+    </div>
+  `;
+}
 
-    updateDashboard();
+function formatEuro(n) {
+  return new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+}
+
+// ── Journal ────────────────────────────────────────────────────
+function renderJournal(el) {
+  el.innerHTML = `
+    <div class="fade-in">
+      <h2 style="font-size:1.3rem;margin-bottom:6px">📓 Journal de Bord</h2>
+      <p class="text-muted text-sm" style="margin-bottom:20px">Tes questions pour le prochain live / séance de coaching</p>
+
+      <div class="card">
+        <h3 style="font-size:0.95rem;margin-bottom:14px;color:var(--accent4)">➕ Ajouter une question</h3>
+        <textarea class="journal-input" id="journal-text" placeholder="Ex: Comment choisir entre LMNP et location nue ? Quelle stratégie ETF pour un PEA de 500€/mois ?"></textarea>
+        <button class="btn btn-primary" style="margin-top:10px" onclick="addJournalEntry()">Ajouter au journal 📝</button>
+      </div>
+
+      <div class="journal-list" id="journal-list">
+        ${renderJournalItems()}
+      </div>
+
+      ${state.journal.length === 0 ? `
+        <div style="text-align:center;padding:40px;color:var(--text-3)">
+          <div style="font-size:2rem;margin-bottom:8px">📭</div>
+          <div>Ton journal est vide. Ajoute ta première question !</div>
+        </div>
+      ` : ''}
+    </div>
+  `;
+}
+
+function renderJournalItems() {
+  return state.journal.map(entry => `
+    <div class="journal-item" id="journal-${entry.id}">
+      <div style="flex:1">
+        <div class="journal-item-text">${escapeHtml(entry.text)}</div>
+        <div class="journal-tag">À poser au prochain live</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+        <div class="journal-item-meta">${entry.date}</div>
+        <button class="delete-btn" onclick="deleteJournalEntry('${entry.id}')">🗑</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function addJournalEntry() {
+  const text = document.getElementById('journal-text')?.value?.trim();
+  if (!text) { showToast('⚠️ Écris une question avant d\'ajouter !'); return; }
+  const entry = {
+    id: Date.now().toString(),
+    text,
+    date: new Date().toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
+  };
+  state.journal.unshift(entry);
+  saveState();
+  if (state.journal.length >= 5) awardBadge('journal_5');
+  addXP(10);
+  showToast('+10 XP · Question ajoutée au journal !');
+  renderMain();
+}
+
+function deleteJournalEntry(id) {
+  state.journal = state.journal.filter(e => e.id !== id);
+  saveState();
+  const el = document.getElementById('journal-' + id);
+  if (el) { el.style.opacity = '0'; el.style.transform = 'translateX(20px)'; el.style.transition = 'all .2s'; setTimeout(() => el.remove(), 200); }
+}
+
+// ── Badges ─────────────────────────────────────────────────────
+function renderBadges(el) {
+  const earned = Object.keys(state.badges).length;
+  el.innerHTML = `
+    <div class="fade-in">
+      <h2 style="font-size:1.3rem;margin-bottom:6px">🏆 Badges & Crédibilité</h2>
+      <p class="text-muted text-sm" style="margin-bottom:4px">${earned}/${BADGE_DEFS.length} badges obtenus</p>
+
+      <div class="card" style="margin-bottom:20px">
+        <div style="display:flex;align-items:center;gap:16px">
+          <div style="font-size:3rem">${getAvatarForXP()}</div>
+          <div style="flex:1">
+            <div style="font-family:var(--font-display);font-size:1.2rem;font-weight:700">${getLevelName()}</div>
+            <div class="text-xs text-muted">${state.xp} XP · ${earned} badges</div>
+            <div class="xp-bar" style="margin-top:8px">
+              <div class="xp-bar-fill" style="width:${Math.min(100, (state.xp / 1000) * 100)}%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="badges-grid">
+        ${BADGE_DEFS.map(b => `
+          <div class="badge ${state.badges[b.id] ? 'earned' : ''}">
+            <div class="badge-icon">${b.icon}</div>
+            <div>
+              <div class="badge-name">${b.name}</div>
+              <div class="badge-desc">${b.desc}</div>
+              ${b.xp > 0 ? `<div class="text-xs" style="color:var(--accent3);margin-top:2px">+${b.xp} XP</div>` : ''}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function getLevelName() {
+  if (state.xp < 100) return '🌱 Apprenti Entrepreneur';
+  if (state.xp < 300) return '📊 Analyste Financier';
+  if (state.xp < 600) return '💼 Investisseur Junior';
+  if (state.xp < 1000) return '🚀 Expert Finance';
+  return '🌟 Finance Pro';
+}
+
+function getAvatarForXP() {
+  if (state.xp < 100) return '🧑‍💻';
+  if (state.xp < 300) return '📊';
+  if (state.xp < 600) return '💼';
+  if (state.xp < 1000) return '🦅';
+  return '🏆';
+}
+
+// ── Init ───────────────────────────────────────────────────────
+function init() {
+  loadState();
+  updateXPDisplay();
+
+  // Nav click handlers
+  document.getElementById('nav-tabs').addEventListener('click', e => {
+    const tab = e.target.closest('[data-tab]')?.dataset?.tab;
+    if (tab) navigate(tab);
+  });
+
+  navigate(state.currentTab || 'dashboard');
+}
+
+window.addEventListener('DOMContentLoaded', init);
+
+// Expose globals for inline handlers
+window.navigate = navigate;
+window.openModule = openModule;
+window.submitAnswer = submitAnswer;
+window.addJournalEntry = addJournalEntry;
+window.deleteJournalEntry = deleteJournalEntry;
+window.calcCompound = calcCompound;
+window.calcCashflow = calcCashflow;
 </script>
-
 </body>
 </html>

@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinancEdu Pro | Niveau Entrepreneur</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --primary: #34d399; /* Vert émeraude */
+            --accent: #818cf8; /* Violet/Bleu tech */
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --correct: #059669;
+            --wrong: #dc2626;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app-container { width: 100%; max-width: 600px; }
+
+        /* Header & Progress */
+        header { text-align: center; margin-bottom: 2rem; }
+        .global-progress {
+            background: #334155;
+            height: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        #global-bar { height: 100%; background: linear-gradient(90deg, var(--primary), var(--accent)); width: 0%; transition: 0.5s; }
+
+        /* Dashboard Cards */
+        .module-grid { display: grid; gap: 15px; }
+        .card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 16px;
+            cursor: pointer;
+            border: 1px solid #334155;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .card:hover { transform: translateY(-3px); border-color: var(--accent); }
+        .card h3 { margin: 0 0 10px 0; color: var(--primary); }
+        .card p { font-size: 0.85rem; color: var(--text-muted); margin: 0; }
+        .status-badge {
+            position: absolute; top: 15px; right: 15px;
+            font-size: 0.7rem; font-weight: bold; padding: 4px 8px; border-radius: 20px;
+        }
+        .status-done { background: var(--correct); color: white; }
+
+        /* Quiz Logic UI */
+        .hidden { display: none; }
+        .btn-action {
+            background: var(--accent);
+            color: white; border: none; padding: 14px;
+            width: 100%; border-radius: 8px; font-weight: 600;
+            cursor: pointer; margin-top: 15px;
+        }
+        .btn-back { background: transparent; color: var(--text-muted); border: 1px solid #334155; padding: 8px 16px; border-radius: 8px; cursor: pointer; margin-bottom: 20px; }
+
+        .option {
+            background: #334155; padding: 15px; border-radius: 10px; margin-bottom: 10px;
+            cursor: pointer; border: 2px solid transparent; transition: 0.2s;
+        }
+        .option:hover { border-color: var(--accent); }
+        .option.selected { border-color: var(--accent); background: #475569; }
+        .option.correct-opt { border-color: var(--correct); background: #064e3b; }
+        .option.wrong-opt { border-color: var(--wrong); background: #7f1d1d; }
+
+        .explanation {
+            background: #1e293b; border-left: 4px solid var(--accent);
+            padding: 15px; margin-top: 15px; font-size: 0.9rem; line-height: 1.5;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            body { padding: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div id="home">
+        <header>
+            <h1>FinancEdu <span style="color:var(--accent)">PRO</span></h1>
+            <p>Niveau 2 : Entrepreneur & Investisseur</p>
+            <div class="global-progress"><div id="global-bar"></div></div>
+            <small id="prog-text">0% Masterisé</small>
+        </header>
+
+        <div class="module-grid">
+            <div class="card" onclick="startModule(0)">
+                <div id="badge-0" class="status-badge"></div>
+                <h3>📈 4. PEA & ETF</h3>
+                <p>Fiscalité, diversification et puissance du long terme.</p>
+            </div>
+            <div class="card" onclick="startModule(1)">
+                <div id="badge-1" class="status-badge"></div>
+                <h3>🛡️ 5. Gestion des Risques</h3>
+                <p>Volatilité, diversification et psychologie de l'investisseur.</p>
+            </div>
+            <div class="card" onclick="startModule(2)">
+                <div id="badge-2" class="status-badge"></div>
+                <h3>🏗️ 6. Effet de Levier</h3>
+                <p>Utiliser la dette pour bâtir un patrimoine (Immo & Business).</p>
+            </div>
+            <div class="card" onclick="startModule(3)">
+                <div id="badge-3" class="status-badge"></div>
+                <h3>⚖️ 7. Fiscalité & TVA</h3>
+                <p>Comprendre ce qu'on donne à l'État (et comment optimiser).</p>
+            </div>
+            <button class="btn-action" style="background:linear-gradient(45deg, #4f46e5, #9333ea)" onclick="startGlobalQuiz()">🏆 QUIZ GLOBAL FINAL</button>
+        </div>
+    </div>
+
+    <div id="quiz-view" class="hidden">
+        <button class="btn-back" onclick="goHome()">← Retour au menu</button>
+        <div id="quiz-content">
+            <h2 id="q-title">Module</h2>
+            <div class="global-progress"><div id="q-progress-bar" style="height:4px; background:var(--accent); width:0%;"></div></div>
+            <p id="q-text" style="font-size: 1.1rem; margin: 20px 0;"></p>
+            <div id="options"></div>
+            <div id="q-feedback" class="explanation hidden"></div>
+            <button id="btn-next" class="btn-action" onclick="handleNext()">Valider la réponse</button>
+        </div>
+    </div>
+
+    <div id="result-view" class="hidden">
+        <header>
+            <h2 id="res-title">Bravo !</h2>
+            <p style="font-size: 3rem; margin: 10px 0;" id="res-score">0%</p>
+            <p id="res-comment"></p>
+            <button class="btn-action" onclick="goHome()">Continuer la progression</button>
+        </header>
+    </div>
+</div>
+
+<script>
+    // --- DONNÉES ---
+    const modules = [
+        {
+            title: "PEA & ETF",
+            questions: [
+                { q: "Quelle est la fiscalité d'un PEA après 5 ans de détention ?", a: ["30% (Flat tax)", "17.2% (Prélèvements sociaux uniquement)", "0% (Exonération totale)"], c: 1, exp: "Après 5 ans, les gains sont exonérés d'impôt sur le revenu, mais restent soumis aux prélèvements sociaux (17.2%)." },
+                { q: "Pourquoi choisir un ETF World plutôt qu'une action Apple ?", a: ["Pour la diversification", "Parce que c'est moins cher", "Parce que Apple va faire faillite"], c: 0, exp: "Un ETF World contient +1500 entreprises. Si une chute, les autres compensent." },
+                { q: "Un investissement de 100€/mois à 7% sur 10 ans donne environ :", a: ["12 000€", "17 300€", "25 000€"], c: 1, exp: "Calcul : 12000€ versés + ~5300€ d'intérêts composés. Magique, non ?" }
+            ]
+        },
+        {
+            title: "Gestion des Risques",
+            questions: [
+                { q: "La bourse chute de 20%. Quelle est la meilleure réaction ?", a: ["Tout vendre pour sauver les meubles", "Ne rien faire et continuer son plan", "Arrêter d'investir"], c: 1, exp: "La volatilité est normale. Vendre en bas transforme une perte virtuelle en perte réelle." },
+                { q: "Que signifie la règle '100 - ton âge' ?", a: ["Le nombre d'actions à acheter", "Le % d'actions dans ton portefeuille", "L'âge de la retraite"], c: 1, exp: "Plus tu es jeune (16 ans), plus tu peux avoir d'actions (84%) car tu as le temps de laisser passer les crises." }
+            ]
+        },
+        {
+            title: "Effet de Levier",
+            questions: [
+                { q: "Qu'est-ce que l'effet de levier ?", a: ["Emprunter pour investir", "Acheter des actions à crédit", "Vendre à découvert"], c: 0, exp: "C'est utiliser l'argent de la banque pour acquérir un actif qui rapporte plus que le coût du crédit." },
+                { q: "Un appart à 100k€ rapporte 600€/mois. Le crédit coûte 500€. C'est :", a: ["Un Cashflow positif", "Une perte d'argent", "Un crédit conso"], c: 0, exp: "L'immobilier s'autofinance et dégage 100€ de surplus. C'est l'enrichissement par la dette." }
+            ]
+        },
+        {
+            title: "Fiscalité & TVA",
+            questions: [
+                { q: "Tu es Micro-Entrepreneur. La TVA est due quand :", a: ["Dès le premier euro", "Après ~36k€ de CA (seuil)", "Jamais"], c: 1, exp: "Il existe une franchise de TVA jusqu'à un certain seuil. En dessous, tu ne la factures pas." },
+                { q: "Le bénéfice imposable, c'est quoi ?", a: ["Le CA total", "CA - charges déductibles", "Ce qu'il reste sur le compte"], c: 1, exp: "Tu ne payes d'impôts que sur ce que tu as réellement gagné (Bénéfice)." }
+            ]
+        }
+    ];
+
+    // --- LOGIQUE ---
+    let state = {
+        currentQuestions: [],
+        index: 0,
+        score: 0,
+        moduleIdx: null,
+        isGlobal: false,
+        answered: false
+    };
+
+    function updateDashboard() {
+        let totalProg = 0;
+        modules.forEach((m, i) => {
+            const saved = localStorage.getItem(`pro-mod-${i}`);
+            if(saved >= 80) {
+                document.getElementById(`badge-${i}`).innerText = "MAÎTRISÉ ✅";
+                document.getElementById(`badge-${i}`).className = "status-badge status-done";
+                totalProg += 25;
+            }
+        });
+        document.getElementById('global-bar').style.width = totalProg + "%";
+        document.getElementById('prog-text').innerText = totalProg + "% Masterisé";
+    }
+
+    function startModule(idx) {
+        state = { currentQuestions: [...modules[idx].questions], index: 0, score: 0, moduleIdx: idx, isGlobal: false, answered: false };
+        showQuiz();
+    }
+
+    function startGlobalQuiz() {
+        const allQ = modules.flatMap(m => m.questions).sort(() => Math.random() - 0.5).slice(0, 10);
+        state = { currentQuestions: allQ, index: 0, score: 0, moduleIdx: null, isGlobal: true, answered: false };
+        showQuiz();
+    }
+
+    function showQuiz() {
+        document.getElementById('home').classList.add('hidden');
+        document.getElementById('result-view').classList.add('hidden');
+        document.getElementById('quiz-view').classList.remove('hidden');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const q = state.currentQuestions[state.index];
+        state.answered = false;
+        document.getElementById('q-title').innerText = state.isGlobal ? "Quiz Global" : modules[state.moduleIdx].title;
+        document.getElementById('q-text').innerText = q.q;
+        document.getElementById('q-feedback').classList.add('hidden');
+        document.getElementById('btn-next').innerText = "Valider la réponse";
+        document.getElementById('q-progress-bar').style.width = ((state.index / state.currentQuestions.length) * 100) + "%";
+
+        const optCont = document.getElementById('options');
+        optCont.innerHTML = '';
+        q.a.forEach((opt, i) => {
+            const div = document.createElement('div');
+            div.className = 'option';
+            div.innerText = opt;
+            div.onclick = () => selectOption(div, i);
+            optCont.appendChild(div);
+        });
+    }
+
+    function selectOption(el, idx) {
+        if(state.answered) return;
+        document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+        el.classList.add('selected');
+        el.dataset.idx = idx;
+    }
+
+    function handleNext() {
+        if(!state.answered) {
+            const sel = document.querySelector('.option.selected');
+            if(!sel) return alert("Choisis une réponse !");
+            
+            const q = state.currentQuestions[state.index];
+            const isCorrect = parseInt(sel.dataset.idx) === q.c;
+            
+            state.answered = true;
+            if(isCorrect) {
+                state.score++;
+                sel.classList.add('correct-opt');
+            } else {
+                sel.classList.add('wrong-opt');
+                document.querySelectorAll('.option')[q.c].classList.add('correct-opt');
+            }
+            
+            const feedback = document.getElementById('q-feedback');
+            feedback.innerText = q.exp;
+            feedback.classList.remove('hidden');
+            document.getElementById('btn-next').innerText = "Continuer";
+        } else {
+            state.index++;
+            if(state.index < state.currentQuestions.length) loadQuestion();
+            else finish();
+        }
+    }
+
+    function finish() {
+        document.getElementById('quiz-view').classList.add('hidden');
+        document.getElementById('result-view').classList.remove('hidden');
+        const percent = Math.round((state.score / state.currentQuestions.length) * 100);
+        document.getElementById('res-score').innerText = percent + "%";
+        
+        if(!state.isGlobal) {
+            localStorage.setItem(`pro-mod-${state.moduleIdx}`, percent);
+        }
+        
+        let msg = percent >= 80 ? "Tu es un futur géant de la finance !" : "Encore un peu de pratique sur les chiffres.";
+        document.getElementById('res-comment').innerText = msg;
+        updateDashboard();
+    }
+
+    function goHome() {
+        document.getElementById('home').classList.remove('hidden');
+        document.getElementById('quiz-view').classList.add('hidden');
+        document.getElementById('result-view').classList.add('hidden');
+        updateDashboard();
+    }
+
+    updateDashboard();
+</script>
+
+</body>
+</html>
